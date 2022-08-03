@@ -42,8 +42,8 @@ for n,psi in enumerate(psi_ratio):
         Y[n]['S'][i] = X[n].S_hat(X[n].phigrid[i],X[n].sigma)
         Y[n]['Pi'][i] = X[n].rhoS + Y[n]['S'][i]*np.sqrt(X[n].rho)*X[n].phigrid[i]*X[n].sigma
         Y[n]['tauPi'][i] = 1 - X[n].phigrid[i]
-        Y[n]['taus2'][i] = X[n].taus2(Y[n]['Pi'][i],X[n].phigrid[i],X[n].sigma)
-        Y[n]['tausW2'][i] = X[n].tausW2(Y[n]['Pi'][i],X[n].phigrid[i],X[n].sigma)
+        Y[n]['taus_pe'][i] = X[n].taus2(Y[n]['Pi'][i],X[n].phigrid[i],X[n].sigma)
+        Y[n]['tausW_pe'][i] = X[n].tausW2(Y[n]['Pi'][i],X[n].phigrid[i],X[n].sigma)
         Y[n]['r2'][i] = X[n].r2(Y[n]['Pi'][i],X[n].phigrid[i],X[n].sigma)
         omegabar = np.sqrt(X[n].rho)*X[n].phigrid[i]*X[n].sigma/(X[n].rho*X[n].iota)
         Y[n]['x'][i] = X[n].x(Y[n]['S'][i],omegabar)
@@ -58,7 +58,7 @@ cmap = matplotlib.cm.ScalarMappable(norm=norm, cmap=matplotlib.cm.Blues)
 
 fig,ax = plt.subplots()
 for n,psi in enumerate(psi_ratio):
-    ax.plot(X[n].phigrid,100*Y[n]['taus2'],label=r'$\psi$ = {0}'.format(np.round(psi,3)),c=cmap.to_rgba(psi**2),linewidth=1)
+    ax.plot(X[n].phigrid,100*Y[n]['taus_pe'],label=r'$\psi$ = {0}'.format(np.round(psi,3)),c=cmap.to_rgba(psi**2),linewidth=1)
 ax.legend(loc='upper left')
 plt.ylabel("Tax (%)")
 plt.xlabel("$\phi$")
@@ -69,7 +69,7 @@ plt.show()
 
 fig,ax = plt.subplots()
 for n,psi in enumerate(psi_ratio):
-    ax.plot(X[n].phigrid,100*Y[n]['tausW2'],label=r'$\psi$ = {0}'.format(np.round(psi,3)),c=cmap.to_rgba(psi**2),linewidth=1)
+    ax.plot(X[n].phigrid,100*Y[n]['tausW_pe'],label=r'$\psi$ = {0}'.format(np.round(psi,3)),c=cmap.to_rgba(psi**2),linewidth=1)
 ax.legend(loc='lower left')
 plt.ylabel("Tax (%)")
 plt.xlabel("$\phi$")
@@ -80,7 +80,7 @@ plt.show()
 
 fig,ax = plt.subplots()
 for n,psi in enumerate(psi_ratio):
-    ax.plot(X[n].phigrid, 100*Y[n]['r2'], label=r'$\psi$ = {0}'.format(np.round(psi,3)),c=cmap.to_rgba(psi**2),linewidth=1)
+    ax.plot(X[n].phigrid, 100*Y[n]['r_pe'], label=r'$\psi$ = {0}'.format(np.round(psi,3)),c=cmap.to_rgba(psi**2),linewidth=1)
 ax.legend(loc='lower left')
 plt.ylabel("Percent (%)")
 plt.xlabel("$\phi$")
