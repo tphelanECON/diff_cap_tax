@@ -18,7 +18,6 @@ delta = parameters.delta
 psi_ratio = parameters.psi_ratio
 phigrid = parameters.phigrid
 rho = parameters.rho
-phimin, phimax = parameters.phimin, parameters.phimax
 
 norm = matplotlib.colors.Normalize(vmin=0, vmax=1)
 cmap = matplotlib.cm.ScalarMappable(norm=norm, cmap=matplotlib.cm.Blues)
@@ -43,7 +42,9 @@ for n,psi in enumerate(psi_ratio):
     Y[n]['check1'], Y[n]['check2'] = np.zeros(len(phigrid)), np.zeros(len(phigrid))
     Y[n]['leverage'] = np.zeros(len(phigrid))
     for i in range(len(phigrid)):
-        X[n] = classes.captax(alpha=alpha,phimin=phimin,phimax=phimax,rhoD=rhoD,rhoS=rhoS,sigma=sigma,delta=delta,psi=psi,iota=iotabar*phigrid[i])
+        if i % 25 == 0:
+            print(i)
+        X[n] = classes.captax(alpha=alpha,rhoD=rhoD,rhoS=rhoS,sigma=sigma,delta=delta,psi=psi,iota=iotabar*phigrid[i])
         Y[n]['S'][i] = X[n].S_hat(X[n].phigrid[i])
         Y[n]['omegabar'][i] = np.sqrt(X[n].rho)*X[n].phigrid[i]*X[n].sigma/(X[n].rho*X[n].iota)
         Y[n]['x'][i] = X[n].x(Y[n]['S'][i],Y[n]['omegabar'][i])
@@ -59,9 +60,19 @@ for n,psi in enumerate(psi_ratio):
         Y[n]['check1'][i] = X[n].check1(Y[n]['S'][i],Y[n]['omegabar'][i])
         Y[n]['check2'][i] = X[n].check2(Y[n]['S'][i],Y[n]['omegabar'][i], Y[n]['x'][i])
         Y[n]['leverage'][i] = Y[n]['sig_c'][i]/(X[n].sigma*X[n].phigrid[i])
-        if i % 25 == 0:
-            print(i)
-            print("Assumptions satisfied?", Y[n]['check1'][i]*Y[n]['check2'][i] > 0)
+
+"""
+Check that the assumptions in Appendix A.2 are satisfied (these ensure that
+there is no arbitrage opportunity and that the contracting problem is well-defined)
+"""
+
+print("Assumptions satisfied?")
+for n,psi in enumerate(psi_ratio):
+    print('$\psi$ = {0}: {1}'.format(psi, Y[n]['check1'].all()*Y[n]['check2'].all()))
+
+"""
+Figures
+"""
 
 fig,ax = plt.subplots()
 for n,psi in enumerate(psi_ratio):

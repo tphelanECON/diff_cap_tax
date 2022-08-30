@@ -1,18 +1,16 @@
 """
-class constructors for "On the Optimality of Differential Asset Taxation".
+class constructors for "On the Optimality of Differential Asset Taxation"
 """
 
 import numpy as np
 import scipy.optimize as scopt
 
 class captax(object):
-    def __init__(self,alpha=0.33,rhoS=0.04,rhoD=0.02,sigma=0.2,
-    delta=0.05,phi=1.0,phimax=1.0,phimin=0.0,psi=0.0,iota=1.0):
+    def __init__(self,alpha=0.33,rhoS=0.04,rhoD=0.02,sigma=0.2,delta=0.05,psi=0.0,iota=1.0):
         self.rhoD, self.rhoS, self.rho = rhoD, rhoS, rhoD + rhoS
         self.sigma, self.iota, self.omega = sigma, iota, 1/(iota*self.rho)
         self.alpha, self.delta, self.psi = alpha, delta, psi
-        self.phi, self.phimin, self.phimax = phi, phimin, phimax
-        self.phigrid = np.linspace(10**-5+self.phimin,self.phimax,400)
+        self.phigrid = np.linspace(10**-4,1-10**-4,500)
 
     def xbar(self,omegabar):
         return scopt.brentq(lambda x: x*np.exp(x**2/2)-omegabar,0,10)
@@ -28,7 +26,7 @@ class captax(object):
         return ind + (1-ind)*(omegabar/x)*np.exp(-x**2/2)/(1 + np.log(omegabar/x) - x**2/2)
 
     def x(self,S,omegabar):
-        xgrid = np.linspace(10**-5,self.xbarbar(omegabar)-10**-5,2500)
+        xgrid = np.linspace(10**-5,self.xbarbar(omegabar)-10**-5,2000)
         maximand = self.g(S,omegabar,xgrid)*self.h(S,omegabar,xgrid)
         return xgrid[np.argmin(-maximand)]
 
@@ -68,7 +66,7 @@ class captax(object):
         omegabar = np.sqrt(self.rho)*phi*self.sigma/(self.rho*self.iota)
         return Pi - np.sqrt(self.rho)*self.sigma*self.x(self.S(Pi,phi),omegabar)
 
-    #interest rate with private risk-sharing
+    #interest rate with private risk-sharing (note presenc of phi in expression)
     def r_pe(self,Pi,phi):
         omegabar = np.sqrt(self.rho)*phi*self.sigma/(self.rho*self.iota)
         return Pi - np.sqrt(self.rho)*self.sigma*phi*self.x(self.S(Pi,phi),omegabar)

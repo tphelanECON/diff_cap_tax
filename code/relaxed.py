@@ -1,7 +1,9 @@
 """
 Figures for capital taxation paper with relaxed collateral constraints.
 
-Remember: no qualifier if collateral constraints at relaxed value.
+Suffix convention: no qualifier if collateral constraints at relaxed value.
+
+Wedges only meaningful if the collateral constraint does not bind.
 """
 
 import numpy as np
@@ -20,7 +22,6 @@ delta = parameters.delta
 psi_ratio = parameters.psi_ratio
 phigrid = parameters.phigrid
 rho = parameters.rho
-phimin, phimax = parameters.phimin, parameters.phimax
 
 norm = matplotlib.colors.Normalize(vmin=0, vmax=1)
 cmap = matplotlib.cm.ScalarMappable(norm=norm, cmap=matplotlib.cm.Blues)
@@ -42,7 +43,9 @@ for n,psi in enumerate(psi_ratio):
     Y[n]['check1'], Y[n]['check2'] = np.zeros(len(phigrid)), np.zeros(len(phigrid))
     Y[n]['leverage'] = np.zeros(len(phigrid))
     for i in range(len(phigrid)):
-        X[n] = classes.captax(alpha=alpha,phimin=phimin,phimax=phimax,rhoD=rhoD,rhoS=rhoS,sigma=sigma,delta=delta,psi=psi,iota=iotabar*phigrid[i])
+        if i % 25 == 0:
+            print(i)
+        X[n] = classes.captax(alpha=alpha,rhoD=rhoD,rhoS=rhoS,sigma=sigma,delta=delta,psi=psi,iota=iotabar*phigrid[i])
         Y[n]['S'][i] = X[n].S_hat(X[n].phigrid[i])
         Y[n]['omegabar'][i] = np.sqrt(X[n].rho)*X[n].phigrid[i]*X[n].sigma/(X[n].rho*X[n].iota)
         Y[n]['x'][i] = X[n].x(Y[n]['S'][i],Y[n]['omegabar'][i])
@@ -55,15 +58,20 @@ for n,psi in enumerate(psi_ratio):
         Y[n]['sig_c'][i] = X[n].sig_c(Y[n]['S'][i],Y[n]['omegabar'][i])
         Y[n]['rE'][i] = X[n].rho*(1 - Y[n]['x'][i]**2 + Y[n]['mu_c'][i]/X[n].rho)
         Y[n]['omegahat'][i] = X[n].omegahat(Y[n]['S'][i],Y[n]['omegabar'][i])
-        Y[n]['nu_B'][i] = X[n].nu_B(Y[n]['S'][i],Y[n]['omegabar'][i])
-        Y[n]['nu_K'][i] = X[n].nu_K(Y[n]['S'][i],Y[n]['omegabar'][i],Y[n]['Pi'][i])
-        Y[n]['omegahat'][i] = X[n].omegahat(Y[n]['S'][i],Y[n]['omegabar'][i])
         Y[n]['check1'][i] = X[n].check1(Y[n]['S'][i],Y[n]['omegabar'][i])
         Y[n]['check2'][i] = X[n].check2(Y[n]['S'][i],Y[n]['omegabar'][i], Y[n]['x'][i])
         Y[n]['leverage'][i] = Y[n]['sig_c'][i]/(X[n].sigma*X[n].phigrid[i])
-        if i % 25 == 0:
-            print(i)
-            print("Assumptions satisfied?", Y[n]['check1'][i]*Y[n]['check2'][i] > 0)
+        Y[n]['nu_B'][i] = X[n].nu_B(Y[n]['S'][i],Y[n]['omegabar'][i])
+        Y[n]['nu_K'][i] = X[n].nu_K(Y[n]['S'][i],Y[n]['omegabar'][i],Y[n]['Pi'][i])
+
+"""
+Check that the assumptions in Appendix A.2 are satisfied (these ensure that
+there is no arbitrage opportunity and that the contracting problem is well-defined)
+"""
+
+for n,psi in enumerate(psi_ratio):
+    print("Assumptions satisfied for " + '$\psi$ = {0}'.format(psi),"?")
+    print(Y[n]['check1'].all()*Y[n]['check2'].all())
 
 """
 Figures
