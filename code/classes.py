@@ -26,7 +26,7 @@ class captax(object):
         return ind + (1-ind)*(omegabar/x)*np.exp(-x**2/2)/(1 + np.log(omegabar/x) - x**2/2)
 
     def x(self,S,omegabar):
-        xgrid = np.linspace(10**-5,self.xbarbar(omegabar)-10**-5,2000)
+        xgrid = np.linspace(10**-5,self.xbarbar(omegabar)-10**-5,2500)
         maximand = self.g(S,omegabar,xgrid)*self.h(S,omegabar,xgrid)
         return xgrid[np.argmin(-maximand)]
 
