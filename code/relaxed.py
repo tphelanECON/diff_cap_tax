@@ -203,3 +203,13 @@ ax.set_title("Return on business income $\sigma_c^2$", fontsize=13)
 destin = '../main/figures/business_return.eps'
 plt.savefig(destin, format='eps', dpi=1000)
 #plt.show()
+
+#back-of-the-envelope calculations given prior to the conclusion of paper:
+bus_inc = rho*Y[n]['x'][-1]**2
+r = Y[3]['r'][-1]
+taus = Y[3]['taus'][-1]
+
+print("Plausibility calculations:")
+print("Expected return on business:", '{0}'.format(100*np.round(bus_inc,3))+"%")
+print("Pre-tax return on savings:", '{0}'.format(100*np.round(r+rhoD,3))+"%")
+print("After-tax return on savings:", '{0}'.format(100*np.round((1-taus)*(r+rhoD),3))+"%")
