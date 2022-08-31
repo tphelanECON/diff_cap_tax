@@ -3,7 +3,7 @@ Figures for capital taxation paper with relaxed collateral constraints.
 
 Suffix convention: no qualifier if collateral constraints at relaxed value.
 
-Wedges only meaningful if the collateral constraint does not bind.
+Wedges only meaningful if the colladteral constraint does not bind.
 """
 
 import numpy as np
@@ -69,9 +69,9 @@ Check that the assumptions in Appendix A.2 are satisfied (these ensure that
 there is no arbitrage opportunity and that the contracting problem is well-defined)
 """
 
+print("Assumptions satisfied?")
 for n,psi in enumerate(psi_ratio):
-    print("Assumptions satisfied for " + '$\psi$ = {0}'.format(psi),"?")
-    print(Y[n]['check1'].all()*Y[n]['check2'].all())
+    print('$\psi$ = {0}: {1}'.format(psi, Y[n]['check1'].all()*Y[n]['check2'].all()))
 
 """
 Figures
