@@ -1,5 +1,5 @@
 """
-Run all of the scripts necessary to replicate the figures in the paper
+Run all of the scripts necessary to replicate the figures in "On the Optimality of Differential Asset Taxation."
 """
 
 import os
@@ -8,4 +8,3 @@ if not os.path.exists('../main/figures'):
 
 import tight
 import relaxed
-import private_equity
