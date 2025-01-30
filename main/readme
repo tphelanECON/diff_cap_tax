@@ -1,3 +1,5 @@
 This folder contains the paper, slides and a short note on the code. 
 
-The paper is "wp1917r", the slides are "SAET_2022" and the note describing the code is "guide_to_code". 
+The paper is "Phelan_CapTax." The working paper version is "wp1917r", and "SAET_2022" are some slides from the 2022 SAET.
+
+The document "guide_to_code" is a note describing the structure of the Python code. 
